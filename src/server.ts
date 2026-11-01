@@ -11,12 +11,15 @@ import { createQuestionRoute } from "./http/routes/create-question.ts";
 import { createRoomRoute } from "./http/routes/create-room.ts";
 import { getRoomQuestions } from "./http/routes/get-room-questions.ts";
 import { getRoomsRoute } from "./http/routes/get-rooms.ts";
+import { likeQuestionRoute } from "./http/routes/like-question.ts";
+import { unlikeQuestionRoute } from "./http/routes/unlike-question.ts";
 import { uploadAudioRoute } from "./http/routes/upload-audio.ts";
 
 const app = fastify().withTypeProvider<ZodTypeProvider>();
 
 app.register(fastifyCors, {
   origin: env.WEB_URL,
+  methods: ["GET", "POST", "DELETE"],
 });
 
 app.register(fastifyMultipart);
@@ -33,6 +36,8 @@ app.register(createRoomRoute);
 app.register(getRoomQuestions);
 app.register(createQuestionRoute);
 app.register(uploadAudioRoute);
+app.register(likeQuestionRoute);
+app.register(unlikeQuestionRoute);
 
 app.listen({ port: env.PORT }).then(() => {
   app.log.info("HTTP server running on http://localhost:3333");
