@@ -2,6 +2,8 @@ import type { FastifyPluginCallbackZod } from "fastify-type-provider-zod";
 import { z } from "zod/v4";
 import { db } from "../../db/connection.ts";
 import { schema } from "../../db/schema/index.ts";
+import { generateQueryEmbeddings } from "../../services/gemini.ts";
+import { answerFromRoomContent } from "../../services/semantic-search.ts";
 
 export const createQuestionRoute: FastifyPluginCallbackZod = (app) => {
   app.post(
@@ -21,9 +23,12 @@ export const createQuestionRoute: FastifyPluginCallbackZod = (app) => {
       const { roomId } = request.params;
       const { question } = request.body;
 
+      const embeddings = await generateQueryEmbeddings(question);
+      const answer = await answerFromRoomContent(roomId, question, embeddings);
+
       const result = await db
         .insert(schema.questions)
-        .values({ roomId, question })
+        .values({ roomId, question, answer, embeddings })
         .returning();
 
       const insertedQuestion = result[0];
@@ -34,6 +39,7 @@ export const createQuestionRoute: FastifyPluginCallbackZod = (app) => {
 
       return reply.status(201).send({
         questionId: insertedQuestion.id,
+        answer,
       });
     }
   );
