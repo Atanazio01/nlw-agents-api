@@ -22,6 +22,20 @@
       "when": 1752244409585,
       "tag": "0002_glossy_loki",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1793492316974,
+      "tag": "0003_nervous_ultimo",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1793493535970,
+      "tag": "0004_parched_puff_adder",
+      "breakpoints": true
     }
   ]
 }
